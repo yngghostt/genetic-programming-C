@@ -29,9 +29,9 @@ typedef struct {
 
 NEURALNETWORK init( void );
 double sigmoid( double x );
-int forward_propagation( NEURALNETWORK *network, double *x );
-void back_propagation( NEURALNETWORK *network, DELTA *delta, double *x, double *y );
-void update_batch( NEURALNETWORK *network, double **batch_x, double **batch_y, int start, int size, double l_rate );
-void fit( NEURALNETWORK *network, double **data_x, double **data_y, long int data_size, int epochs, int mini_batch_size, double l_rate );
-double accuracy(NEURALNETWORK *network, double **test_x, double **test_y, int start, int test_size );
+int forward_propagation( NEURALNETWORK *network, int *x );
+void back_propagation( NEURALNETWORK *network, DELTA *delta, int *x, int *y );
+void update_batch( NEURALNETWORK *network, int **batch_x, int **batch_y, int start, int size, double l_rate );
+void fit( NEURALNETWORK *network, int **data_x, int **data_y, long int data_size, int epochs, int mini_batch_size, double l_rate );
+double accuracy(NEURALNETWORK *network, int **test_x, int **test_y, int start, int test_size );
 #endif

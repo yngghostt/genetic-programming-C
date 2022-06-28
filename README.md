@@ -76,3 +76,28 @@ extern int max_ind( double *x, int n );
 
 Кроме того, был реализован парсер данных. Картинки в датасете хранятся построчно, каждое значение пикселя записано через запятую. Данный формат необходимо было превратить в массив массивов, содержащих целые числа. Реализация представлена в функции void picture_csv_parser( double **layers, double **answers ).
 
+### Запуск обучения
+
+```c
+#include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
+#include "data_parcer.h"
+#include "NEURALNETWORK.h"
+#include "vectormath.h"
+
+int main() {
+    srand(time(NULL));
+
+    int **layers = int_dynamic_array_alloc(DATASET_SIZE, 784);
+    int **answers = int_dynamic_array_alloc_zeros(DATASET_SIZE, 10);
+
+    picture_csv_parser(layers, answers);
+
+    NEURALNETWORK neuralnetwork = init();
+    fit(&neuralnetwork, layers, answers, DATASET_SIZE, 5, 100, 5);
+    double acc = accuracy(&neuralnetwork, layers, answers, DATASET_SIZE, 100);
+    printf("%f", acc);
+    getchar();
+}
+```

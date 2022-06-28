@@ -8,7 +8,7 @@ void picture_csv_parser(double **layers, double **answers){
     int i, j;
     FILE *dataset;
     char picture[10000] = {0};
-    if((dataset = fopen("D:\\projects\\CLionProjects\\nnet\\mnist_784.txt", "r")) == NULL){
+    if((dataset = fopen("PATH_HERE", "r")) == NULL){
         printf("Impossible to open this file.");
         return;
     }

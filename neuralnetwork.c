@@ -60,13 +60,13 @@ NEURALNETWORK init( void )
     return network;
 }
 
-int forward_propagation( NEURALNETWORK *network, double *x ) {
+int forward_propagation( NEURALNETWORK *network, int *x ) {
     double z1[LAYER2];
     double z2[LAYER2];
     double o[LAYER3];
     int i;
 
-    mxv(network->h1_weights, x, z1, LAYER2, LAYER1);
+    mxv(network->h1_weights, (double*)x, z1, LAYER2, LAYER1);
     plus(z1, network->h1_biases, z1, LAYER2);
     for (i = 0; i < LAYER2; i++)
         z1[i] = sigmoid(z1[i]);
@@ -84,7 +84,7 @@ int forward_propagation( NEURALNETWORK *network, double *x ) {
     return max_ind(o, LAYER3);
 }
 
-void back_propagation( NEURALNETWORK *network, DELTA *delta, double *x, double *y )
+void back_propagation( NEURALNETWORK *network, DELTA *delta, int *x, int *y )
 {
     double *z1 = (double *)malloc(LAYER2*sizeof(double));
     double *a1 = (double *)malloc(LAYER2*sizeof(double));
@@ -104,7 +104,7 @@ void back_propagation( NEURALNETWORK *network, DELTA *delta, double *x, double *
     int i;
 
     //Прямой проход
-    mxv(network->h1_weights, x, z1, LAYER2, LAYER1);
+    mxv(network->h1_weights, (double*)x, z1, LAYER2, LAYER1);
     plus(z1, network->h1_biases, z1, LAYER2);
     for (i = 0; i < LAYER2; i++)
         a1[i] = sigmoid(z1[i]);
@@ -120,7 +120,7 @@ void back_propagation( NEURALNETWORK *network, DELTA *delta, double *x, double *
         predicted[i] = sigmoid(z_o[i]);
 
     //Обратный проход
-    minus(predicted, y, delta1, LAYER3);
+    minus(predicted, (double*)y, delta1, LAYER3);
     for(i = 0; i < LAYER3; i++)
     {
         delta1[i] *= dsigmoid(z_o[i]);
@@ -138,7 +138,7 @@ void back_propagation( NEURALNETWORK *network, DELTA *delta, double *x, double *
     mxv(h2_weights_tr, delta2, delta3, LAYER2, LAYER2);
     for(i = 0; i < LAYER2; i++)
         delta3[i] *= dsigmoid(z1[i]);
-    vxv(delta1, x, h1_del_w,LAYER2, LAYER1);
+    vxv(delta1, (double*)x, h1_del_w,LAYER2, LAYER1);
 
     dynamic_array_free(o_weights_tr, LAYER2);
     dynamic_array_free(h2_weights_tr, LAYER2);
@@ -160,7 +160,7 @@ void back_propagation( NEURALNETWORK *network, DELTA *delta, double *x, double *
 
 }
 
-void update_batch( NEURALNETWORK *network, double **batch_x, double **batch_y, int start, int size, double l_rate )
+void update_batch( NEURALNETWORK *network, int **batch_x, int **batch_y, int start, int size, double l_rate )
 {
     DELTA delta;
 
@@ -223,7 +223,7 @@ void update_batch( NEURALNETWORK *network, double **batch_x, double **batch_y, i
     dynamic_array_free(h1_w, LAYER3);
 }
 
-void fit( NEURALNETWORK *network, double **data_x, double **data_y, long int data_size, int epochs, int mini_batch_size, double l_rate )
+void fit( NEURALNETWORK *network, int **data_x, int **data_y, long int data_size, int epochs, int mini_batch_size, double l_rate )
 {
     int i, j;
     for(i = 0; i < epochs; i++)
@@ -237,16 +237,16 @@ void fit( NEURALNETWORK *network, double **data_x, double **data_y, long int dat
     }
 }
 
-double accuracy(NEURALNETWORK *network, double **test_x, double **test_y, int start, int test_size )
+double accuracy(NEURALNETWORK *network, int **test_x, int **test_y, int start, int test_size )
 {
     int i, pred, ans, score = 0;
     for(i = start; i < start + test_size; i++)
     {
         pred = forward_propagation(network, test_x[i]);
-        ans = max_ind(test_y[i], LAYER3);
+        ans = max_ind((double*)test_y[i], LAYER3);
         if (pred == ans)
             score++;
     }
 
-    return (double)score/test_size;
+    return ((double)score)/test_size;
 }

@@ -82,7 +82,7 @@ extern int max_ind( double *x, int n );
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-#include "data_parcer.h"
+#include "data_parser.h"
 #include "NEURALNETWORK.h"
 #include "vectormath.h"
 
@@ -101,3 +101,5 @@ int main() {
     getchar();
 }
 ```
+
+Для запуска необходимо прочитать некоторое количество данных, затем создать нейросеть, инициализировать ее и запустить обучение функцией fit. Затем, когда обучение закончено, необходимо оценить результат обучения, используя функцию accuracy. 
